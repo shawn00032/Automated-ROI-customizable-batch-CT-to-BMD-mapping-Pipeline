@@ -1,26 +1,50 @@
-# AtlasBMD
+# Automated ROI Customizable Batch CT-to-BMD Mapping Pipeline
 
-AtlasBMD is a Windows-first CT-to-BMD segmentation studio built with PySide6 and VTK.
+This repository contains a Windows-first Python desktop application for CT-to-BMD mapping workflows. The app supports interactive single-case use, batch atlas workflows, editable HU-to-BMD calibration, segmentation refinement, export, and review.
 
-## Features
+## Main Capabilities
 
-- Single-case and batch-atlas workflows
-- Embedded interactive VTK 3D viewers for segmentation review
-- Existing-segmentation and TotalSegmentator parent-mask backends
-- Automatic refinement with graph-cut or fast surface-snap refinement plus morphology cleanup
-- 2D slice-based child ROI editing with 3 orthogonal views
-- Batch atlas ranking, propagation, and selective label fusion
-- BMD mask and point-cloud export
+- Single Case Mode for preparing, refining, reviewing, and exporting one case
+- Batch Atlas Mode for selecting atlas cases and propagating ROI information across a cohort
+- Existing segmentation workflow support
+- Optional `TotalSegmentator` workflow support
+- Interactive 2D slice editing and 3D segmentation review
+- HU-to-BMD calibration with editable settings
+- Export of masks, point clouds, manifests, logs, and batch summaries
 
-## Quick Start
+## Repository Scope
+
+This GitHub repository is the source-availability part of the submission.
+
+Included:
+
+- application source code
+- tests
+- helper scripts used around the project
+- Windows packaging files
+
+Excluded:
+
+- local CT datasets
+- generated outputs
+- build artifacts
+- temporary caches
+
+## Run From Source
+
+Install the base runtime requirements:
 
 ```powershell
-cd C:\Users\qsdxz\Desktop\fyp\totalSeg\ct_to_bmd_studio
 pip install -r requirements.txt
+```
+
+Launch the app:
+
+```powershell
 python -m ct_to_bmd_studio
 ```
 
-Or, after installation:
+You can also use:
 
 ```powershell
 atlasbmd
@@ -32,35 +56,54 @@ Or on Windows:
 .\launch_app.bat
 ```
 
-## Windows Release Build
-
-```powershell
-.\build_windows_release.bat
-```
-
-The packaged release is written to `dist\AtlasBMD\AtlasBMD.exe`.
-
-`TotalSegmentator`, `SimpleITK`, `pandas`-based reporting, and the legacy DearPyGui UI are optional extras and are not required for the base Qt desktop build.
-
 ## Optional Extras
+
+Some features are intentionally optional and are not required for the base desktop app:
 
 ```powershell
 pip install ".[totalseg,registration,reporting,legacy-ui]"
 ```
 
-## Developer Entrances
+Optional groups:
+
+- `totalseg`: adds `TotalSegmentator`
+- `registration`: adds `SimpleITK`
+- `reporting`: adds `pandas`
+- `legacy-ui`: adds the older DearPyGui UI path
+
+## Windows Packaging
+
+Build the packaged Windows release with:
 
 ```powershell
-.\launch_refinement_dev.bat
-.\launch_fast_refinement_dev.bat
+.\build_windows_release.bat
+```
+
+The packaged executable is written to:
+
+```text
+dist\AtlasBMD\AtlasBMD.exe
+```
+
+The packaged archive is written to:
+
+```text
+dist\AtlasBMD-windows.zip
 ```
 
 ## Outputs
 
-- Final ROI mask `.nii.gz`
-- Refined parent mask `.nii.gz`
+The app can export:
+
+- final ROI mask `.nii.gz`
+- refined parent mask `.nii.gz`
 - BMD point cloud `.csv`
 - BMD point cloud `.vtk`
-- Per-case manifest `.json`
-- Batch summary `.csv`
-- Run log `.txt`
+- per-case manifest `.json`
+- batch summary `.csv`
+- run log `.txt`
+
+## Notes
+
+- The current packaged Windows build is intended to reduce friction for running the app, but it does not make the source impossible to reverse engineer.
+- `TotalSegmentator` support is optional at runtime and should degrade gracefully when unavailable.
